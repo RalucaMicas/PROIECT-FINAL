@@ -1,0 +1,71 @@
+{% extends "finance_app/dashboard.html" %}
+
+{% load static %}
+
+{% block content %}
+<style>
+    .content-wrapper {
+        display: flex;
+    }
+    .image-container {
+        width: 30%;
+        padding-right: 20px;
+    }
+    .form-container {
+        width: 70%;
+    }
+    .save-button {
+        background-color: green;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .save-button:hover {
+        background-color: limegreen;
+    }
+    .attention {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="image-container">
+        <img src="{% static 'images/buget.jpg' %}" alt="Image Description" style="width: 160%;">
+    </div>
+
+<div class="content">
+    <h1>Setează bugetul</h1>
+    
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+
+    {% if current_buget %}
+    <h2>Buget pentru luna curentă ({{ current_month }})</h2>
+    <p>Buget: {{ current_buget.buget }}</p>
+    {% endif %}
+
+    {% if historical_buget %}
+    <h2>Istoric bugete</h2>
+    <ul>
+        {% for buget in historical_buget %}
+        <li>{{ buget.month }} - Buget: {{ buget.buget }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h3><span class="attention">Atentie!</span> Bugetul se seteaza doar o data pentru luna in curs, fara a putea fi modificat ulterior. Bugetul se va reseta la data de 1 a fiecarei luni.</h3>
+    
+    {% if not message %}
+    <h2>Setează un nou buget pentru luna curentă</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ buget_form.as_p }}
+        <button type="submit" name="set_buget" class="save-button">Salvează bugetul</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

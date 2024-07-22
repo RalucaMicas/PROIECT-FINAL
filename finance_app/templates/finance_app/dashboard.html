@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            margin: 0;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #2c3e50;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+        }
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 10px 0;
+            margin: 10px 0;
+        }
+        .sidebar a i {
+            margin-right: 10px;
+        }
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            width: calc(100% - 220px);
+            padding-left: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Dashboard Finance App</h2>
+        <a href="{% url 'set_buget' %}"><i class="fas fa-wallet"></i> Setează bugetul</a>
+        <a href="{% url 'add_expense' %}"><i class="fas fa-money-bill-wave"></i> Adaugă cheltuială</a>
+        <a href="{% url 'summarize_expenses' %}"><i class="fas fa-chart-pie"></i> Sumar cheltuieli</a>
+        <a href="{% url 'summary_over_time' %}"><i class="fas fa-calendar-alt"></i> Rezumat cronologic</a>
+    </div>
+    <div class ="content">
+      <header>
+        <nav>
+          <ul>
+            <li><a href="{% url 'dashboard' %}">Home</a></li>
+            {% if user.is_authenticated %}
+              <li>>
+                Logged in as {{ user.username }}
+                <form method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" style="background:none; border:none; color:#007bff; cursor:pointer; padding:0;">Logout</button>
+                </form>
+              </li>
+            {% else %}
+              <li><a href="{% url 'login' %}">Login</a></li>
+              <li><a href="{% url 'register' %}">Inregistrare</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </header>
+      <h1>💰 Dashboard Financiar - cheltuieste cu cap! 💰</h1>
+      {% block content %}
+      {% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,121 @@
+{% extends "finance_app/dashboard.html" %}
+
+{% load static %}
+
+{% block content %}
+<style>
+    .content-wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+    .image-container{
+        width: 30%;
+    }
+    .image-container img {
+        margin-left: -530px;
+        width: 120%;
+        margin-top: 60px;
+    }
+    .data-container {
+        width: 70%;
+        padding-right: 20px;
+    }
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 400px;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="data-container">
+        <h2>Sumar cheltuieli</h2>
+
+        {% if detailed_expenses_by_category %}
+        <h3>Cheltuieli pe categorii</h3>
+        <ul>
+            {% for category, expenses in detailed_expenses_by_category.items %}
+            <li>
+                <strong>{{ category }}: {{ amount_by_category.category }} </strong>
+                <ul>
+                    {% for expense in expenses %}
+                    <li>{{ expense.name }} - {{ expense.amount }} RON - {{ expense.date }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+        <h3>Total cheltuit pentru fiecare categorie:</h3>
+        <ul>
+            {% for category, amount in amount_by_category.items %}
+            <li>{{ category }}: {{ amount }} RON</li>
+            {% endfor %}
+        </ul>
+        <h3>Total cheltuit: {{ total_spent }} RON</h3>
+        <h3>Buget rămas: {{ remaining_buget }} RON</h3>
+        <h3>Buget zilnic rămas: {{ daily_buget|floatformat:2 }} RON</h3>
+
+        <h3>Diagrama: Procentajul cheltuielilor per categorie</h3>
+        <div class="chart-container">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+        {% else %}
+        <p>Nu există cheltuieli înregistrate pentru această lună</p>
+        {% endif %}
+    </div>
+    <div class="image-container">
+        <img src="{% static 'images/sumar.jpg' %}" alt="Image Description">
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Canvas element:", document.getElementById('myChart')); // Check if canvas is found
+    var ctx = document.getElementById('myChart').getContext('2d');
+
+    if (!ctx) {
+        console.error("Failed to get canvas context.");
+        return;
+    }
+    
+    var categories = JSON.parse('{{ categories|escapejs }}');
+    var percentages = JSON.parse('{{ percentages|escapejs }}');
+
+    console.log("Categories:", categories);
+    console.log("Percentages:", percentages);
+
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: categories,
+            datasets: [{
+                data: percentages,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+});
+</script>
+
+{% endblock %}

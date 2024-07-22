@@ -1,0 +1,10 @@
+{% extends "finance_app/dashboard.html" %}
+
+{% block content %}
+    <h2>Inregistrare utilizator</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="set_buget" class="save-button">Inregistrare</button>
+    </form>
+{% endblock %}

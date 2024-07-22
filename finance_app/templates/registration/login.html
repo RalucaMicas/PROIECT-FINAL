@@ -1,0 +1,24 @@
+{% extends "finance_app/dashboard.html" %}
+
+{% block content %}
+  <h2>Login</h2>
+
+  {% if messages %}
+    <div>
+      {% for message in messages %}
+        <p style="color: red;">{{ message }}</p>
+      {% endfor %}
+    </div >
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.username.label_tag }}
+    {{ form.username }}
+    <br>
+    {{ form.password.label_tag }}
+    {{ form.password }}
+    <br>
+    <button type="submit" name="login" class="save-button">Login</button>
+  </form>
+{% endblock %}
