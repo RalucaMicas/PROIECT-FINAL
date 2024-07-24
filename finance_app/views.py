@@ -87,13 +87,11 @@ def set_buget(request):
         buget_form = BugetForm(request.POST, instance=buget_instance)
         if buget_form.is_valid():
             buget = buget_form.save(commit=False)
-            buget.user = request.user
             buget.save()
             return redirect('set_buget')
     else:
         buget_form = BugetForm(instance=buget_instance)
 
-    current_buget = Buget.objects.filter(user=request.user, month=current_month).first()
     historical_buget = Buget.objects.filter(user=request.user).exclude(month=current_month)
     message = 'Bugetul pentru aceasta luna este deja stabilit!' if not created else None
     
@@ -101,7 +99,7 @@ def set_buget(request):
 
     context = {
         'current_month': current_month,
-        'current_buget': current_buget,
+        'current_buget': buget_instance,
         'historical_buget': historical_buget,
         'buget_form': buget_form,
         'bugets':bugets,
@@ -124,12 +122,10 @@ def add_expense(request):
         expense_form = ExpenseForm()
 
     expenses = Expense.objects.filter(user=request.user).order_by('-date')
-    # expenses = Expense.objects.all().order_by('-date')
 
     context = {
         'expense_form': expense_form,
         'expenses': expenses,
-        'user': request.user,
     }
     
     return render(request, 'finance_app/add_expense.html', context)
