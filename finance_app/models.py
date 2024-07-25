@@ -26,12 +26,12 @@ class Expense(models.Model):
         return f'{self.name} - {self.amount} - {self.category} - {self.date}'
 
 class Buget(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=get_default_user)
-    month = models.CharField(max_length=7, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    month = models.CharField(max_length=7)
     buget = models.FloatField(default=0.0)
 
     def __str__(self):
-        return f'{self.month} - {self.buget}'
+        return f'{self.user.username} - {self.month} - {self.buget}'
     
     class Meta:
         constraints = [

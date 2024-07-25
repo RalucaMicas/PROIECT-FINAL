@@ -26,6 +26,8 @@ from django.contrib import messages
 
 import json
 
+from django.db import IntegrityError
+
 expense_categories = [
         '🍔 Mancare',
         '🏡 Casa',
@@ -76,12 +78,7 @@ def custom_logout(request):
 def set_buget(request):
     current_month = datetime.datetime.now().strftime('%Y-%m')
 
-    try:
-        buget_instance = Buget.objects.get(user=request.user, month=current_month)
-        created = False
-    except Buget.DoesNotExist:
-        buget_instance = Buget(user=request.user, month=current_month)
-        created = True
+    buget_instance, created = Buget.objects.get_or_create(user=request.user, month=current_month)
 
     if request.method == 'POST':
         buget_form = BugetForm(request.POST, instance=buget_instance)

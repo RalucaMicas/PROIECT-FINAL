@@ -36,7 +36,7 @@
         <img src="{% static 'images/buget.jpg' %}" alt="Image Description" style="width: 160%;">
     </div>
 
-<div class="content">
+<div class="content form-container">
     <h1>Setează bugetul</h1>
     
     {% if message %}
@@ -64,6 +64,20 @@
     <form method="post">
         {% csrf_token %}
         {{ buget_form.as_p }}
+        {% if buget_form.errors %}
+        <div class="errorlist"
+            <ul>
+                {% for field in buget_form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in buget_form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
         <button type="submit" name="set_buget" class="save-button">Salvează bugetul</button>
     </form>
     {% endif %}

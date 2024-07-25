@@ -32,9 +32,12 @@ class ExpenseForm(forms.ModelForm):
         fields = ['name', 'amount', 'category', 'date']
 
 class BugetForm(forms.ModelForm):
-    month = forms.CharField(label='Luna')
-    buget = forms.FloatField(label='Buget')
-    
     class Meta:
         model = Buget
         fields = ['buget']
+    
+    def clean_buget(self):
+        buget = self.cleaned_data.get('buget')
+        if buget is None or buget <= 0:
+            raise forms.ValidationError("Bugetul trebuie să fie mai mare decât 0.")
+        return buget
