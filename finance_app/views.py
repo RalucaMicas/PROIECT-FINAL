@@ -86,8 +86,7 @@ def set_buget(request):
     if request.method == 'POST':
         buget_form = BugetForm(request.POST, instance=buget_instance)
         if buget_form.is_valid():
-            buget = buget_form.save(commit=False)
-            buget.save()
+            buget_form.save()
             return redirect('set_buget')
     else:
         buget_form = BugetForm(instance=buget_instance)
@@ -104,7 +103,6 @@ def set_buget(request):
         'buget_form': buget_form,
         'bugets':bugets,
         'message': message,
-        'user': request.user,
     }
 
     return render(request, 'finance_app/set_buget.html', context)

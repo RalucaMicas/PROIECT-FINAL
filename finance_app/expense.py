@@ -1,9 +1,14 @@
-class Expense:
+from dataclasses import dataclass
 
-    def __init__(self, name, category, amount) -> None:
-        self.name = name
-        self.category = category
-        self.amount = amount
+import typing as t
+
+@dataclass
+class Expense:
+    name: str
+    category: str
+    amount: float
+    val_optionala: t.Optional[int] = None
+    obs_optionala: str = 'default'
     
     def __repr__(self) -> str:
         return f'<Cheltuiala: {self.name}, {self.category}, {self.amount:.2f} RON>'
