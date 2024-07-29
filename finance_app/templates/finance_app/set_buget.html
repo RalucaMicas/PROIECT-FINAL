@@ -29,6 +29,10 @@
         color: red;
         font-weight: bold;
     }
+    .error-list {
+        color: red;
+        font-weight: bold;
+    }
 </style>
 
 <div class="content-wrapper">
@@ -36,50 +40,51 @@
         <img src="{% static 'images/buget.jpg' %}" alt="Image Description" style="width: 160%;">
     </div>
 
-<div class="content form-container">
-    <h1>Setează bugetul</h1>
+    <div class="content form-container">
+        <h1>Setează bugetul</h1>
     
-    {% if message %}
-    <p>{{ message }}</p>
-    {% endif %}
+        {% if message %}
+        <p>{{ message }}</p>
+        {% endif %}
 
-    {% if current_buget %}
-    <h2>Buget pentru luna curentă ({{ current_month }})</h2>
-    <p>Buget: {{ current_buget.buget }}</p>
-    {% endif %}
+        {% if current_buget %}
+        <h2>Buget pentru luna curentă ({{ current_month }})</h2>
+        <p>Buget: {{ current_buget.buget }}</p>
+        {% endif %}
 
-    {% if historical_buget %}
-    <h2>Istoric bugete</h2>
-    <ul>
-        {% for buget in historical_buget %}
-        <li>{{ buget.month }} - Buget: {{ buget.buget }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+        {% if historical_buget %}
+        <h2>Istoric bugete</h2>
+        <ul>
+            {% for buget in historical_buget %}
+            <li>{{ buget.month }} - Buget: {{ buget.buget }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
-    <h3><span class="attention">Atentie!</span> Bugetul se seteaza doar o data pentru luna in curs, fara a putea fi modificat ulterior. Bugetul se va reseta la data de 1 a fiecarei luni.</h3>
+        <h3><span class="attention">Atentie!</span> Bugetul se seteaza doar o data pentru luna in curs, fara a putea fi modificat ulterior. Bugetul se va reseta la data de 1 a fiecarei luni.</h3>
     
-    {% if not message %}
-    <h2>Setează un nou buget pentru luna curentă</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ buget_form.as_p }}
-        {% if buget_form.errors %}
-        <div class="errorlist"
-            <ul>
-                {% for field in buget_form %}
-                    {% for error in field.errors %}
+        {% if not message %}
+        <h2>Setează un nou buget pentru luna curentă</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ buget_form.as_p }}
+            {% if buget_form.errors %}
+            <div class="error-list">
+                <ul>
+                    {% for field in buget_form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in buget_form.non_field_errors %}
                         <li>{{ error }}</li>
                     {% endfor %}
-                {% endfor %}
-                {% for error in buget_form.non_field_errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+                </ul>
+            </div>
+            {% endif %}
+            <button type="submit" name="set_buget" class="save-button">Salvează bugetul</button>
+        </form>
         {% endif %}
-        <button type="submit" name="set_buget" class="save-button">Salvează bugetul</button>
-    </form>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

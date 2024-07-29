@@ -77,16 +77,39 @@ def custom_logout(request):
 @login_required
 def set_buget(request):
     current_month = datetime.datetime.now().strftime('%Y-%m')
+    user = request.user
 
-    buget_instance, created = Buget.objects.get_or_create(user=request.user, month=current_month)
+    try:
+        buget_instance = Buget.objects.get(user=user, month=current_month)
+        created = False
+    except Buget.DoesNotExist:
+        buget_instance = None
+        created = True
 
     if request.method == 'POST':
-        buget_form = BugetForm(request.POST, instance=buget_instance)
+        if created:
+            buget_form = BugetForm(request.POST)
+        else:
+            buget_form = BugetForm(request.POST, instance=buget_instance)
+
         if buget_form.is_valid():
-            buget_form.save()
-            return redirect('set_buget')
+            buget_value = buget_form.cleaned_data['buget']
+            if buget_value > 0:
+                if created:
+                    buget_instance = Buget(user=user, month=current_month, buget=buget_value)
+                    buget_instance.save()
+                else:
+                    buget_form.save()
+                return redirect('set_buget')
+            else:
+                buget_form.add_error('buget', 'Bugetul trebuie să fie mai mare decât 0.')
+        else:
+            print(buget_form.errors) #debug statement
     else:
-        buget_form = BugetForm(instance=buget_instance)
+        if created:
+            buget_form = BugetForm()
+        else:
+            buget_form = BugetForm(instance=buget_instance)
 
     historical_buget = Buget.objects.filter(user=request.user).exclude(month=current_month)
     message = 'Bugetul pentru aceasta luna este deja stabilit!' if not created else None
