@@ -7,6 +7,7 @@ APLICATIE (WEB) PENTRU MONITORIZAREA BUGETULUI/CHELTUIELILOR
 Functionalitati:
 
 determinarea unui buget (introdus de user);
+validarea bugetului pentru evitarea inregistarii formularului buget cu valoare negativa sau egala cu 0;
 bugetul se seteaza o data pentru luna in curs (calculele bugetului vor fi conform cheltuielilor din luna curenta)
 se stabileste un buget pe data de 1 a fiecarei luni (se reseteaza calculele la inceput de luna)
 dupa setarea bugetului va aparea un mesaj ca bugetul este deja stabilit pentru luna in curs, iar formularul de inregistrare buget nu va mai fi afisat (pana la data de 1 a urmatoarei luni);
